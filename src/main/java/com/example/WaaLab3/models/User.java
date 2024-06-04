@@ -1,5 +1,6 @@
 package com.example.WaaLab3.models;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
+@JsonPropertyOrder({ "id", "name", "posts" })
 public class User implements IUser{
 
     @Id

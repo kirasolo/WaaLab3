@@ -1,11 +1,13 @@
 package com.example.WaaLab3.services;
 
 
+import com.example.WaaLab3.aspect.UserNotFoundException;
 import com.example.WaaLab3.models.Post;
 import com.example.WaaLab3.models.User;
 import com.example.WaaLab3.repositories.PostRepository;
 import com.example.WaaLab3.repositories.UserRepo;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import com.example.WaaLab3.aspect.ExecutionTime;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,21 +28,20 @@ public class UserService {
     @Autowired
     ModelMapper modelMapper;
 
-    public List<User> getAll(){
+    public List<User> getAll() {
 
         return userRepo.findAll();
     }
 
 
-
-    public User getById(long id){
+    public User getById(long id) {
 
 
         return userRepo.findById(id).get();
 
     }
 
-    public User create(User user){
+    public User create(User user) {
 
         return userRepo.save(user);
 
@@ -48,7 +49,7 @@ public class UserService {
     }
 
 
-    public User updateById(long id, User user){
+    public User updateById(long id, User user) {
 
         return userRepo.findById(id)
                 .map(u -> {
@@ -61,11 +62,10 @@ public class UserService {
     }
 
 
-    public void deleteById(long id){
+    public void deleteById(long id) {
 
         userRepo.deleteById(id);
     }
-
 
 
     public User addPostToUser(Long id, Post post) {
@@ -81,8 +81,7 @@ public class UserService {
     }
 
 
-
-    public List<User> getAllWithMany(String numberOfPosts){
+    public List<User> getAllWithMany(String numberOfPosts) {
 
 
         int n = numberOfPosts == null ? 1 : Integer.parseInt(numberOfPosts);
@@ -90,4 +89,10 @@ public class UserService {
     }
 
 
+    @ExecutionTime
+    public User getUserById(Long id) {
+        return userRepo.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+
+
+    }
 }
