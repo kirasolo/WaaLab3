@@ -74,5 +74,4 @@ public class Post implements IPost {
         this.author = author;
     }
 
-
 }

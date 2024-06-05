@@ -3,12 +3,17 @@ package com.example.WaaLab3.models;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 
 import java.util.ArrayList;
 import java.util.List;
 @Data
+@Setter
+@Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
@@ -20,10 +25,17 @@ public class User implements IUser{
     private long Id;
 
     private String name;
+    private String email;
+    private String password;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id")
     private List<Post> posts = new ArrayList<>();
+
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable
+    private List<Role> roles;
 
     @Override
     public long getId() {
@@ -35,6 +47,7 @@ public class User implements IUser{
         return name;
     }
 
+
     @Override
     public void setId(long id) {
         this.Id = id;
@@ -45,9 +58,7 @@ public class User implements IUser{
         this.name = name;
     }
 
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
+
 
     public void addPost(Post post) {
         this.posts.add(post);

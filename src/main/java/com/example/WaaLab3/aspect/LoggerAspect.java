@@ -1,33 +1,46 @@
 package com.example.WaaLab3.aspect;
 
 import com.example.WaaLab3.repositories.LoggerRepo;
-import com.example.WaaLab3.aspect.LoggerEntity;
+import com.example.WaaLab3.models.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
-@Aspect
+
+
 @Component
-public class ExecutionTimeAspect {
+@Aspect
+public class LoggerAspect {
     @Autowired
-    private LoggerRepo loggerRepo;
+    LoggerRepo loggerRepo;
 
-    @Around("@annotation(com.example.WaaLab3.aspect.ExecutionTime)")
+
+    @Pointcut("@annotation(com.example.WaaLab3.aspect.ExecutionTime)")
+    public void executionTimePointCut() {
+    }
+
+    @Around("executionTimePointCut()")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.currentTimeMillis();
         Object proceed = joinPoint.proceed();
         long executionTime = System.currentTimeMillis() - start;
 
-        Date now = new Date();
-        String operation = joinPoint.getSignature().toShortString();
-        LoggerEntity logger = new LoggerEntity(null, now, now, "kira", operation + " executed in " + executionTime + "ms");
+        Logger logger = new Logger();
+        logger.setDate(LocalDate.now());
+        logger.setTime(LocalTime.now());
+        logger.setPrinciple("user1");
+        logger.setOperation(joinPoint.getSignature().toShortString() + " executed in " + executionTime + "ms");
+
         loggerRepo.save(logger);
 
         return proceed;
+
 
     }
 }

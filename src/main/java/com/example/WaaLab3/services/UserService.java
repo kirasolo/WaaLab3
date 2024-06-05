@@ -33,7 +33,7 @@ public class UserService {
         return userRepo.findAll();
     }
 
-
+    @ExecutionTime
     public User getById(long id) {
 
 
@@ -88,11 +88,4 @@ public class UserService {
         return userRepo.findAll().stream().filter(user -> user.getPosts().size() > n).toList();
     }
 
-
-    @ExecutionTime
-    public User getUserById(Long id) {
-        return userRepo.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
-
-
-    }
 }
